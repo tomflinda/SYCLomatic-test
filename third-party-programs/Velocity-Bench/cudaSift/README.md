@@ -20,7 +20,7 @@ This file lists the detail steps to migrate CUDA version of [cudaSift](https://g
    $ export cudaSift_HOME=/path/to/Velocity-Bench/cudaSift
    $ sudo apt-get install libopencv-dev # make sure ```OpenCV*``` is installed on the machine.
    $ cd ${cudaSift_HOME}/CUDA && mkdir build
-   $ cd build && cmake ..   # make sure all dependency library are installed.
+   $ cd build && cmake -DUSE_SM=80 ..   # make sure all dependency library are installed.
 ```
 Summary of cudaSift project source code:  12 files in CUDA folder
 
@@ -140,6 +140,64 @@ $ make -f Makefile.dpct
 
    Total workload time = 2206.28 ms
 ```
+
+### 7 Migrate CMake script and use migrated CMake script to build the SYCL version cudaSift
+In section 3,  using the migration command
+
+```
+$ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include
+```
+We have got the SYCL version cudaSift code, then we can append the option "--migrate-build-script-only" to the migration command to only migrate the CMake script, command like:
+```
+$ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include --migrate-build-script-only
+```
+Alternatively, we also can migrate CMake script together cudaSift source code with appending the opiton "--migrate-build-script=CMake", command like:
+```
+$ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include --migrate-build-script=CMake
+```
+Then we should make the following changes in the migrated CMake script in out directory:
+```
+diff --git /path/to/cuda/CMakeLists.txt /path/to/SYCL/CMakeLists.txt
+index d1e4b6d..ba85f53 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,13 +56,13 @@ set(cuda_sources
+ )
+
+ set(sources
+-  ${CMAKE_SOURCE_DIR}/../common/Utility.cpp
++  ${CMAKE_SOURCE_DIR}/common/Utility.cpp
+   geomFuncs.cpp
+   mainSift.cpp.dp.cpp
+ )
+
+ include_directories(
+-  ${CMAKE_SOURCE_DIR}/../common/
++  ${CMAKE_SOURCE_DIR}/common/
+   ${CMAKE_CURRENT_SOURCE_DIR}
+ )
+
+```
+Also copy the "common" directory into the "out" directory, using the following commands:
+```
+$cd ${cudaSift_HOME}/CUDA/out
+$cp ../../common/ ./ -r
+```
+Then in the "out" directory, using the following commands to build the SYCL version cudaSift:
+```
+$mkdir -p build
+$cd build
+$cmake -DCMAKE_C_COMPILER=icx    -DCMAKE_CXX_COMPILER=icpx -DUSE_SM=80 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ..
+$make
+```
+Then binary cudasift appears in the directory "${cudaSift_HOME}/CUDA/out/build". As the path of test data is relative to the path of cuda verson binary, you need to move SYCL version binary to same directory where cuda version bianry lies.
+So, we continue to run the following commands:
+```
+$cp cudasift ../../build/cudasift_sycl.run
+$cd ../../build
+$./cudasift_sycl.run
+```
+
 **Note:** 
 * The testing result was running on Intel(R) Core(TM) i7-13700K CPU backend with Intel® oneAPI Base Toolkit(2023.2 version).
 * The Reference migrated code is attached in **migrated** folder.
@@ -153,7 +211,7 @@ If an error occurs during runtime, refer to [Diagnostics Utility for Intel® one
 * Command Line Options of [SYCLomatic](https://oneapi-src.github.io/SYCLomatic/dev_guide/command-line-options-reference.html) or [Intel® DPC++ Compatibility Tool](https://software.intel.com/content/www/us/en/develop/documentation/intel-dpcpp-compatibility-tool-user-guide/top/command-line-options-reference.html)
 * [oneAPI GPU Optimization Guide](https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/)
 * [SYCLomatic project](https://github.com/oneapi-src/SYCLomatic/)
-
+* [Migrate a CMake Build Script](https://github.com/oneapi-src/SYCLomatic/blob/SYCLomatic/docs/dev_guide/migration/migrate-cmake-build.rst)
 
 ## Trademarks information
 Intel, the Intel logo, and other Intel marks are trademarks of Intel Corporation or its subsidiaries.<br>
