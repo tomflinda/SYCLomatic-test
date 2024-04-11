@@ -141,8 +141,8 @@ $ make -f Makefile.dpct
    Total workload time = 2206.28 ms
 ```
 
-### 7 Migrate CMake script and use migrated CMake script to build the SYCL version cudaSift
-In section 3,  using the migration command
+### 7 Migrate CMake script and use the migrated CMake script to build the SYCL version cudaSift
+In section 3, using the migration command
 
 ```
 $ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include
