@@ -70,6 +70,7 @@ $ ls compile_commands.json  # make sure compile_commands.json is generated
 compile_commands.json
 ```
 ### 3 Migrate the source code and build script
+## 3.1 Migrate the source code and generate build script `Makefile.dpct`
 ```sh
 # From the CUDA directory as root directory:
 $ cd ${cudaSift_HOME}/CUDA
@@ -100,14 +101,19 @@ Now you can see the migrated files in the `out` folder as follow:
       └── matching.dp.cpp
 
    ```
-Besides of using the generate `Makefile.dpct` for the migrated code, another way is to migrate the CMake build script.
 
-After running the migration command above, the SYCL version cudaSift code has been generated, then the option "--migrate-build-script-only" needs to be appended to the migration command to only migrate the CMake script, command like:
+## 3.2 Migrate the source code and CMake build script
+In section 3.2, after running the migration command:
+```sh
+$ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include
+```
+The SYCL version cudaSift code has been generated, then append the option "--migrate-build-script-only" to the migration command above, rerun the command below to only migrated the CMake build script:
 ```
 $ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include --migrate-build-script-only
 ```
-Alternatively, CMake script can also be migrated together with cudaSift source code when the opiton "--migrate-build-script=CMake" is appended into the migration command, command like:
-```
+
+Alternatively, CMake script can also be migrated together with cudaSift source code when the opiton "--migrate-build-script=CMake" is appended into the migration command in section 3.2, command like:
+```sh
 $ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include --migrate-build-script=CMake
 ```
 Then the following changes should be applied into the migrated CMake script in `out` directory:
@@ -134,12 +140,12 @@ index d1e4b6d..ba85f53 100644
 
 ```
 Also copy the `common` directory into the `out` directory, using the following commands:
-```
+```sh
 $cd ${cudaSift_HOME}/CUDA/out
 $cp ../../common/ ./ -r
 ```
 Then in the `out` directory, using the following commands to build the SYCL version cudaSift:
-```
+```sh
 $mkdir -p build
 $cd build
 $cmake -DCMAKE_C_COMPILER=icx    -DCMAKE_CXX_COMPILER=icpx -DUSE_SM=80 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ..
@@ -194,7 +200,6 @@ $ make -f Makefile.dpct
 
    Total workload time = 2206.28 ms
 ```
-
 **Note:** 
 * The testing result was running on Intel(R) Core(TM) i7-13700K CPU backend with Intel® oneAPI Base Toolkit(2023.2 version).
 * The Reference migrated code is attached in **migrated** folder.
