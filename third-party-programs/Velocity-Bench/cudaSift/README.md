@@ -70,7 +70,7 @@ $ ls compile_commands.json  # make sure compile_commands.json is generated
 compile_commands.json
 ```
 ### 3 Migrate the source code and build script
-Follow section 3.1 or section 3.2 to migrate the source code and corresponding build scripts.
+**Follow section 3.1 or section 3.2 to migrate the source code and corresponding build scripts.**
 ## 3.1 Migrate the source code and generate build script `Makefile.dpct`
 ```sh
 # From the CUDA directory as root directory:
@@ -114,13 +114,13 @@ After the SYCL version cudaSift code has been generated, then append the option 
 ```
 $ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include --migrate-build-script-only
 ```
-Alternatively, CMake script can also be migrated together with cudaSift source code.
-### 3.2.3 Migrate the source code and CMake build script together
-When the opiton "--migrate-build-script=CMake" is appended into the migration command as follows:
+Alternatively, CMake script can also be migrated together with cudaSift source code, when the opiton "--migrate-build-script=CMake" is appended into the migration command as follows:
 ```sh
 $ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include --migrate-build-script=CMake
 ```
 Then the SYCL version cudaSift code and the SYCL version CMake build script are generated together.
+
+### 3.2.3 Do the changes to SYCL version CMake build script and copy the code CMake build script depends on
 Continuely, do the following changes into the migrated CMake script in `out` directory:
 ```
 diff --git /path/to/cuda/CMakeLists.txt /path/to/SYCL/CMakeLists.txt
