@@ -104,24 +104,22 @@ Now you can see the migrated files in the `out` folder as follow:
    ```
 
 ## 3.2 Migrate the source code and CMake build script
-### 3.2.1 Migrate the source code separately
+### 3.2.1 Migrate the source code
 Run the migration command below to generate SYCL version cudaSift code:
 ```sh
 $ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include
 ```
-### 3.2.2 Migrated the CMake build script separately
-After the SYCL version cudaSift code has been generated, then append the option "--migrate-build-script-only" to the migration command, rerun the command below to only migrated the CMake build script:
+### 3.2.2 Migrated the CMake build script
+Apply option "--migrate-build-script-only" to the migration command as follows to migrate the CMake build script:
 ```
 $ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include --migrate-build-script-only
 ```
-Alternatively, CMake script can also be migrated together with cudaSift source code, when the opiton "--migrate-build-script=CMake" is appended into the migration command as follows:
+Or, CMake script can be migrated together with cudaSift source code with the option "--migrate-build-script=CMake" as follows:
 ```sh
 $ dpct --in-root=. -p=./build/compile_commands.json --out-root=out --gen-build-script --cuda-include-path=/usr/local/cuda/include --migrate-build-script=CMake
 ```
-Then the SYCL version cudaSift code and the SYCL version CMake build script are generated together.
-
-### 3.2.3 Do the changes to SYCL version CMake build script and copy the code CMake build script depends on
-Continuely, do the following changes into the migrated CMake script in `out` directory:
+### 3.2.3 Apply necessary manual fix to SYCL version CMake build script
+Do the following changes to the migrated CMake script in the `out` directory:
 ```
 diff --git /path/to/cuda/CMakeLists.txt /path/to/SYCL/CMakeLists.txt
 index d1e4b6d..ba85f53 100644
@@ -144,22 +142,23 @@ index d1e4b6d..ba85f53 100644
  )
 
 ```
-Also copy the `common` directory into the `out` directory, using the following commands:
+Also copy the `common` directory to the `out` directory, using the following commands:
 ```sh
 $cd ${cudaSift_HOME}/CUDA/out
 $cp ../../common/ ./ -r
 ```
-### 3.2.4 Build the SYCL version cudaSift code with SYCL version CMake build script
-Then in the `out` directory, using the following commands to build the SYCL version cudaSift:
+### 3.2.4 Build the SYCL version cudaSift code with CMake build script
+In the `out` directory, use the following commands to build the SYCL version cudaSift:
 ```sh
 $mkdir -p build
 $cd build
 $cmake -DCMAKE_C_COMPILER=icx    -DCMAKE_CXX_COMPILER=icpx -DUSE_SM=80 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ..
 $make
 ```
+After build, the binary `cudasift` is generated in the directory `${cudaSift_HOME}/CUDA/out/build`
 ### 3.2.5 Run the SYCL version cudaSift
-Then the binary `cudasift` is generated in the directory `${cudaSift_HOME}/CUDA/out/build`. As the path of test data is relative to the path of cuda verson binary, the SYCL version binary should be moved to the same level directory where the cuda version bianry lies.
-So, continue to run the following commands to run the sycl version binary.
+As the path of test data is relative to the path of CUDA version binary, the SYCL version binary should be moved to the same level directory where the CUDA version binary lies.
+Run the following commands to run the SYCL version binary.
 ```
 $cp cudasift ../../build/cudasift_sycl.run
 $cd ../../build
