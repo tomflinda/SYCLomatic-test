@@ -8,5 +8,6 @@
     <rules>
         <optlevelRule excludeOptlevelNameString="cuda" />
         <optlevelRule GPUFeature="NOT double" excludeOptlevelNameString="gpu" />
+        <optlevelRule excludeOptlevelNameString="syclcompat" />
     </rules>
 </test>
