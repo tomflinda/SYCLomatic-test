@@ -22,7 +22,7 @@
 
 __global__ void producer_kernel_membar_gl(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("membar.gl;" : : : "memory");
     *flag = 1;
@@ -41,7 +41,7 @@ __global__ void consumer_kernel_membar_gl(int *data, int *flag, int *output) {
 
 __global__ void producer_kernel_membar_cta(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("membar.cta;" : : : "memory");
     *flag = 1;
@@ -60,7 +60,7 @@ __global__ void consumer_kernel_membar_cta(int *data, int *flag, int *output) {
 
 __global__ void producer_kernel_membar_sys(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("membar.sys;" : : : "memory");
     *flag = 1;
@@ -79,7 +79,7 @@ __global__ void consumer_kernel_membar_sys(int *data, int *flag, int *output) {
 
 __global__ void producer_kernel_fence_sc_cta(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("fence.sc.cta; " : : : "memory");
     *flag = 1;
@@ -99,7 +99,7 @@ __global__ void consumer_kernel_fence_sc_cta(int *data, int *flag,
 
 __global__ void producer_kernel_fence_sc_gpu(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("fence.sc.gpu; " : : : "memory");
     *flag = 1;
@@ -119,7 +119,7 @@ __global__ void consumer_kernel_fence_sc_gpu(int *data, int *flag,
 
 __global__ void producer_kernel_fence_sc_sys(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("fence.sc.sys; " : : : "memory");
     *flag = 1;
@@ -139,7 +139,7 @@ __global__ void consumer_kernel_fence_sc_sys(int *data, int *flag,
 
 __global__ void producer_kernel_fence_acq_rel_cta(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("fence.acq_rel.cta; " : : : "memory");
     *flag = 1;
@@ -159,7 +159,7 @@ __global__ void consumer_kernel_fence_acq_rel_cta(int *data, int *flag,
 
 __global__ void producer_kernel_fence_acq_rel_gpu(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("fence.acq_rel.cta; " : : : "memory");
     *flag = 1;
@@ -179,7 +179,7 @@ __global__ void consumer_kernel_fence_acq_rel_gpu(int *data, int *flag,
 
 __global__ void producer_kernel_fence_acq_rel_sys(int *data, int *flag) {
   if (threadIdx.x == 0) {
-    *data = 42;
+    *data = 0xABCD;
 
     asm volatile("fence.acq_rel.sys; " : : : "memory");
     *flag = 1;
@@ -217,12 +217,9 @@ bool kernel_membar_gl_test() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
@@ -247,12 +244,9 @@ bool kernel_membar_sys_test() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
@@ -277,12 +271,9 @@ bool kernel_membar_cta_test() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
@@ -307,12 +298,9 @@ bool kernel_kernel_fence_sc_cta() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
@@ -337,12 +325,9 @@ bool kernel_kernel_fence_sc_device() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
@@ -367,12 +352,9 @@ bool kernel_kernel_fence_sc_sys() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
@@ -397,12 +379,9 @@ bool kernel_fence_acq_rel_cta() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
@@ -427,12 +406,9 @@ bool kernel_fence_acq_rel_device() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
@@ -457,12 +433,9 @@ bool kernel_fence_acq_rel_sys() {
   cudaFree(d_flag);
   cudaFree(d_output);
 
-  if (h_output == 42) {
-    printf("Verification passed! Consumer read the correct data: %d\n",
-           h_output);
+  if (h_output == 0xABCD) {
     return true;
   } else {
-    printf("Verification failed. Consumer read incorrect data: %d\n", h_output);
     return false;
   }
 }
