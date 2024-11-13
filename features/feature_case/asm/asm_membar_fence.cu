@@ -210,7 +210,7 @@ bool kernel_membar_gl_test() {
 
   producer_kernel_membar_gl<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_membar_gl<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
@@ -237,7 +237,7 @@ bool kernel_membar_sys_test() {
 
   producer_kernel_membar_sys<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_membar_sys<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
@@ -264,7 +264,7 @@ bool kernel_membar_cta_test() {
 
   producer_kernel_membar_cta<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_membar_cta<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
@@ -291,7 +291,7 @@ bool kernel_kernel_fence_sc_cta() {
 
   producer_kernel_fence_sc_cta<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_fence_sc_cta<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
@@ -318,7 +318,7 @@ bool kernel_kernel_fence_sc_device() {
 
   producer_kernel_fence_sc_gpu<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_fence_sc_gpu<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
@@ -345,7 +345,7 @@ bool kernel_kernel_fence_sc_sys() {
 
   producer_kernel_fence_sc_sys<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_fence_sc_sys<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
@@ -372,7 +372,7 @@ bool kernel_fence_acq_rel_cta() {
 
   producer_kernel_fence_acq_rel_cta<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_fence_acq_rel_cta<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
@@ -399,7 +399,7 @@ bool kernel_fence_acq_rel_device() {
 
   producer_kernel_fence_acq_rel_cta<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_fence_acq_rel_cta<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
@@ -426,7 +426,7 @@ bool kernel_fence_acq_rel_sys() {
 
   producer_kernel_fence_acq_rel_sys<<<1, 32>>>(d_data, d_flag);
   consumer_kernel_fence_acq_rel_sys<<<1, 32>>>(d_data, d_flag, d_output);
-
+  cudaDeviceSynchronize();
   cudaMemcpy(&h_output, d_output, sizeof(int), cudaMemcpyDeviceToHost);
 
   cudaFree(d_data);
