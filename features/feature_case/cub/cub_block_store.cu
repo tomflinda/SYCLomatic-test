@@ -65,12 +65,14 @@ int main() {
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   int ref_data_2[32] = {0, 4, 8, 12, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0, 0,  0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  cudaMallocManaged(&d_data, sizeof(int) * 32);
+  int h_data[32] = {0};
+  cudaMalloc(&d_data, sizeof(int) * 32);
   cudaMemset(d_data, 0, sizeof(int) * 32);
   BlockedKernel<<<1, 32>>>(d_data, 5);
   cudaStreamSynchronize(0);
+  cudaMemcpy(h_data, d_data, sizeof(int)*32, cudaMemcpyDeviceToHost);
 
-  if (!verify_data(d_data, ref_data_1, 32)) {
+  if (!verify_data(h_data, ref_data_1, 32)) {
     std::cout << "BlockExclusiveScanKernel"
               << " verify failed" << std::endl;
     result = false;
@@ -81,10 +83,12 @@ int main() {
   }
 
   cudaMemset(d_data, 0, sizeof(int) * 31);
+  memset(h_data, 0, sizeof(int) * 32);
   StripedKernel<<<1, 32>>>(d_data, 5);
   cudaStreamSynchronize(0);
+  cudaMemcpy(h_data, d_data, sizeof(int)*32, cudaMemcpyDeviceToHost);
 
-  if (!verify_data(d_data, ref_data_2, 32)) {
+  if (!verify_data(h_data, ref_data_2, 32)) {
     std::cout << "BlockExclusiveScanKernel"
               << " verify failed" << std::endl;
     result = false;
