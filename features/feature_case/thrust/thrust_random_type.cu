@@ -84,27 +84,27 @@ int main(void) {
   }
 
   {
-    thrust::host_vector<thrust::complex<double>> h_complex(4);
-    h_complex[0] = thrust::complex<double>(1.0, 1.0);  // 1 + 1i
-    h_complex[1] = thrust::complex<double>(0.0, 1.0);  // 0 + 1i
-    h_complex[2] = thrust::complex<double>(-1.0, 0.0); // -1 + 0i
-    h_complex[3] = thrust::complex<double>(0.0, -1.0); // 0 - 1i
+    thrust::host_vector<thrust::complex<float>> h_complex(4);
+    h_complex[0] = thrust::complex<float>(1.0, 1.0);  // 1 + 1i
+    h_complex[1] = thrust::complex<float>(0.0, 1.0);  // 0 + 1i
+    h_complex[2] = thrust::complex<float>(-1.0, 0.0); // -1 + 0i
+    h_complex[3] = thrust::complex<float>(0.0, -1.0); // 0 - 1i
 
     // Copy host vector to device vector
-    thrust::device_vector<thrust::complex<double>> d_complex = h_complex;
+    thrust::device_vector<thrust::complex<float>> d_complex = h_complex;
 
     // Create a device vector to store the results
-    thrust::device_vector<double> d_results(4);
+    thrust::device_vector<float> d_results(4);
 
     // Compute arguments (angles) of complex numbers
     thrust::transform(
         d_complex.begin(), d_complex.end(), d_results.begin(),
-        [] __device__(thrust::complex<double> z) { return thrust::arg(z); });
+        [] __device__(thrust::complex<float> z) { return thrust::arg(z); });
 
     // Copy results back to host
-    thrust::host_vector<double> h_results = d_results;
+    thrust::host_vector<float> h_results = d_results;
 
-    double ref[4] = {0.785398, 1.5708, 3.14159, -1.5708};
+    float ref[4] = {0.785398, 1.5708, 3.14159, -1.5708};
 
     for (int i = 0; i < 4; i++) {
       if (std::fabs(ref[i] - h_results[i]) > 1e-5) {
