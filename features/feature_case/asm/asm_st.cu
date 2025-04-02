@@ -95,7 +95,6 @@ bool test_2() {
 }
 
 int main() {
-
   TEST(test_1);
   TEST(test_2);
   return 0;
