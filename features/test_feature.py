@@ -249,6 +249,15 @@ def build_test():
             link_opts.append(' dnnl.lib')
     ret = False
 
+    if test_config.current_test == 'nvshmem':
+        ISHMEMROOT = os.environ['ISHMEMROOT']
+        ISHMEMVER = os.environ['ISHMEMVER']
+
+        if (ISHMEMROOT and ISHMEMVER):
+            link_opts.append(os.path.join(ISHMEMROOT, ISHMEMVER, 'lib', 'libishmem.a'))
+
+        link_opts.append('-lze_loader -lmpi')
+
     if (test_config.current_test == 'cufft-external-workspace'):
         manual_fix_for_cufft_external_workspace(srcs[0])
     if (test_config.current_test in occupancy_calculation_exper):
@@ -275,4 +284,3 @@ def run_test():
     if test_config.current_test.startswith('ccl-test'):
         return call_subprocess('mpirun -n 2 ' + os.path.join(os.path.curdir, test_config.current_test + '.run '))
     return run_binary_with_args()
-
