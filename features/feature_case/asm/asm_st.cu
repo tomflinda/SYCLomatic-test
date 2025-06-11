@@ -94,8 +94,34 @@ bool test_2() {
   return false;
 }
 
+__device__ __forceinline__ void st_flag_volatile(int *flag_addr, int flag) {
+  asm volatile("st.volatile.global.u32 [%1], %0;" ::"r"(flag), "l"(flag_addr));
+}
+
+__global__ void test_flags(int *flag) { st_flag_volatile(flag, 123); }
+
+bool test_3() {
+  int *d_flag;
+  int h_flag = 0;
+
+  cudaMalloc(&d_flag, sizeof(int));
+  cudaMemset(d_flag, 0, sizeof(int));
+
+  // Launch test kernel
+  test_flags<<<1, 1>>>(d_flag);
+  cudaDeviceSynchronize();
+
+  // Copy result back to host
+  cudaMemcpy(&h_flag, d_flag, sizeof(int), cudaMemcpyDeviceToHost);
+  cudaFree(d_flag);
+
+  return (h_flag == 123) ? true : false;
+}
+
 int main() {
   TEST(test_1);
   TEST(test_2);
+  TEST(test_3);
+
   return 0;
 }

@@ -88,8 +88,47 @@ bool test_2() {
   return (h_out.x == h_in.x && h_out.y == h_in.y) ? true : false;
 }
 
+__device__ __forceinline__ int ld_flag_volatile(int *flag_addr) {
+  int flag;
+  asm volatile("ld.volatile.global.u32 %0, [%1]; membar.gl;"
+               : "=r"(flag)
+               : "l"(flag_addr));
+  return flag;
+}
+
+__global__ void test_ld_flag_acquire(int *flag_addr, int *out_value) {
+  int val = ld_flag_volatile(flag_addr);
+  *out_value = val;
+}
+
+bool test_3() {
+
+  int h_flag_value = 999;
+  int h_result = 0;
+
+  int *d_flag_addr;
+  int *d_result;
+
+  cudaMalloc(&d_flag_addr, sizeof(int));
+  cudaMalloc(&d_result, sizeof(int));
+
+  cudaMemcpy(d_flag_addr, &h_flag_value, sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemset(d_result, 0, sizeof(int));
+
+  test_ld_flag_acquire<<<1, 1>>>(d_flag_addr, d_result);
+  cudaDeviceSynchronize();
+
+  cudaMemcpy(&h_result, d_result, sizeof(int), cudaMemcpyDeviceToHost);
+
+  cudaFree(d_flag_addr);
+  cudaFree(d_result);
+
+  return (h_result == h_flag_value) ? true : false;
+}
+
 int main() {
   TEST(test_1);
   TEST(test_2);
+  TEST(test_3);
   return 0;
 }
