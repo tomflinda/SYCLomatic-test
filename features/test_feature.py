@@ -20,7 +20,7 @@ from test_utils import *
 cmpl_only_tests =['thrust-for-h2o4gpu', 'cublas-create-Sgemm-destroy', 'cublasLegacyLv123', 'cublasReturnType', 'cublasTtrmm', 'cublas_64',
                  'grid_constant', 'cusolver_range', 'cusparse-helper', 'macro', 'volatile-vec']
 
-cmpl_only_as_wa_tests = ['thrust-op', 'curand', 'curand-usm', 'curand-cross-function', 'cublasBatch', 'cublasGetSetMatrix', 'cublasGetSetVector', 'cublasIsamax_etc', 'cublas-lambda',
+cmpllink_only_as_wa_tests = ['thrust-op', 'curand', 'curand-usm', 'curand-cross-function', 'cublasBatch', 'cublasGetSetMatrix', 'cublasGetSetVector', 'cublasIsamax_etc', 'cublas-lambda',
                         'cublas_curandInMacro', 'cublasLegacyCZ', 'cublasLegacyHelper', 'cublasRegularCZ', 'cublasTsyrkx', 'cublasTtrmmLegacy', 'cublas-usm-legacy', 'math-emu', 'cublas-usm',
                         'cusolverDnEi', 'cusolverDnEi-part2', 'cusolverDnLn', 'cusolverDnLn_cuda10-1', 'cusolverDnLn_cuda10-1-part2', 'cusolverDnLn-part2', 'cublas-only-usm', 'cufft-deduce',
                          'cufft-different-locations-usm', 'cufft-reuse-handle', 'cufft-different-locations', 'cufft-usm', 'cufft', 'driverCtx', 'driverDevice', 'driverArray', 'driverTex',
@@ -228,7 +228,7 @@ def build_test():
         ret = compile_and_link([os.path.join(test_config.out_root, 'cufft_test.dp.cpp')], cmp_options, objects, link_opts)
     elif re.match('^cufft.*', test_config.current_test) and platform.system() == 'Linux':
         ret = compile_and_link(srcs, cmp_options, objects, link_opts)
-    elif test_config.current_test in cmpl_only_tests or test_config.current_test in cmpl_only_as_wa_tests:
+    elif test_config.current_test in cmpl_only_tests:
         ret = compile_files(srcs, cmp_options)
     else:
         ret = compile_and_link(srcs, cmp_options, objects, link_opts)
@@ -236,7 +236,7 @@ def build_test():
 
 
 def run_test():
-    if test_config.current_test in cmpl_only_tests or test_config.current_test in cmpl_only_as_wa_tests:
+    if test_config.current_test in cmpl_only_tests or test_config.current_test in cmpllink_only_as_wa_tests:
        return True
     if test_config.current_test.startswith(('text_experimental_obj_', 'text_experimental_tex_', 'graphics_interop_')) and test_config.device_filter.count("cuda") == 0:
         return True
