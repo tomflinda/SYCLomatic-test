@@ -24,7 +24,7 @@ cmpl_only_as_wa_tests = ['thrust-op', 'curand', 'curand-usm', 'curand-cross-func
                         'cublas_curandInMacro', 'cublasLegacyCZ', 'cublasLegacyHelper', 'cublasRegularCZ', 'cublasTsyrkx', 'cublasTtrmmLegacy', 'cublas-usm-legacy', 'math-emu', 'cublas-usm',
                         'cusolverDnEi', 'cusolverDnEi-part2', 'cusolverDnLn', 'cusolverDnLn_cuda10-1', 'cusolverDnLn_cuda10-1-part2', 'cusolverDnLn-part2', 'cublas-only-usm', 'cufft-deduce',
                          'cufft-different-locations-usm', 'cufft-reuse-handle', 'cufft-different-locations', 'cufft-usm', 'cufft', 'driverCtx', 'driverDevice', 'driverArray', 'driverTex',
-                         'driverMemset', 'cub_warp', 'cub_device_run_length_encode_encode', 'user_defined_rules_2', 'cooperative_group_coalesced_group', 'text_experimental_build_only',
+                         'driverMemset', 'cub_warp', 'cub_device_run_length_encode_encode', 'cooperative_group_coalesced_group', 'text_experimental_build_only',
                          'wmma', 'assert', 'peer_access_using_driver_api']
 
 occupancy_calculation_exper = ['occupancy_calculation']
