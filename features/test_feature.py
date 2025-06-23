@@ -156,7 +156,7 @@ def build_test():
              'cudnn-binary', 'cudnn-bnp1', 'cudnn-bnp2', 'cudnn-bnp3', 'cudnn-normp1', 'cudnn-normp2', 'cudnn-normp3',
              'cudnn-convp1', 'cudnn-convp2', 'cudnn-convp3', 'cudnn-convp4', 'cudnn-convp5', 'cudnn-convp6', 'cudnn-rnn',
              'cudnn-GetErrorString', 'cudnn-convp7',
-             'cudnn-types', 'cudnn-version', 'cudnn-dropout', 'matmul', 'matmul_2', 'matmul_3', 'result_type_overload'
+             'cudnn-types', 'cudnn-version', 'cudnn-dropout', 'matmul', 'matmul_2', 'matmul_3', 'result_type_overload', 'get_library_version'
              ]
 
     no_fast_math_tests = ['math-emu-half-after11', 'math-emu-half2-after11', 'math-ext-half-after11', 'math-ext-half2-after11',
@@ -165,7 +165,7 @@ def build_test():
     if test_config.current_test in oneDPL_related:
         cmp_options.append(prepare_oneDPL_specific_macro())
 
-    if test_config.current_test == 'cub_device_spmv' or re.match('^cu.*', test_config.current_test):
+    if test_config.current_test == 'cub_device_spmv' or re.match('^cu.*', test_config.current_test) or test_config.current_test == 'get_library_version':
         if platform.system() == 'Linux':
             link_opts = test_config.mkl_link_opt_lin
         else:
@@ -202,17 +202,6 @@ def build_test():
         else:
             link_opts.append(' dnnl.lib')
 
-    if test_config.current_test == 'get_library_version':
-        if platform.system() == 'Linux':
-            link_opts.append(' -ldnnl')
-            link_opts = link_opts + test_config.mkl_link_opt_lin
-        else:
-            link_opts.append(' dnnl.lib')
-            link_opts = link_opts + test_config.mkl_link_opt_win
-        cmp_options.append("-DMKL_ILP64")
-
-    ret = False
-
     if test_config.current_test == 'nvshmem':
         ISHMEMROOT = os.environ['ISHMEMROOT']
         ISHMEMVER = os.environ['ISHMEMVER']
@@ -227,6 +216,7 @@ def build_test():
     if (test_config.current_test in occupancy_calculation_exper):
         manual_fix_for_occupancy_calculation(srcs[0])
 
+    ret = False
     if test_config.current_test == 'cufft_test':
         ret = compile_and_link([os.path.join(test_config.out_root, 'cufft_test.dp.cpp')], cmp_options, objects, link_opts)
     elif re.match('^cufft.*', test_config.current_test) and platform.system() == 'Linux':
