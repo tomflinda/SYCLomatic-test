@@ -239,7 +239,7 @@ def build_test():
 
 def run_test():
     if test_config.current_test in cmpl_only_tests or test_config.current_test in cmpllink_only_as_wa_tests or \
-            (test_config.test_option == 'option_usmnone_cpu' and (test_config.current_test in cmpllink_only_as_wa_tests_usmnone)):
+            (( test_config.test_option == 'option_usmnone_cpu' or test_config.test_option == 'option_usmnone_gpu' ) and (test_config.current_test in cmpllink_only_as_wa_tests_usmnone)):
        return True
     if test_config.current_test.startswith(('text_experimental_obj_', 'text_experimental_tex_', 'graphics_interop_')) and test_config.device_filter.count("cuda") == 0:
         return True
