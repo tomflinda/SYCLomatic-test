@@ -27,6 +27,8 @@ cmpllink_only_as_wa_tests = ['thrust-op', 'curand', 'curand-usm', 'curand-cross-
                          'driverMemset', 'cub_warp', 'cub_device_run_length_encode_encode', 'cooperative_group_coalesced_group', 'text_experimental_build_only',
                          'wmma', 'assert', 'peer_access_using_driver_api']
 
+cmpllink_only_as_wa_tests_usmnone = ['curand-device-usm', 'curand-device', 'cufft-func-ptr', 'cufft-others', 'cub_block', 'codepin_basic']
+
 occupancy_calculation_exper = ['occupancy_calculation']
 
 def setup_test():
@@ -236,7 +238,8 @@ def build_test():
 
 
 def run_test():
-    if test_config.current_test in cmpl_only_tests or test_config.current_test in cmpllink_only_as_wa_tests:
+    if test_config.current_test in cmpl_only_tests or test_config.current_test in cmpllink_only_as_wa_tests or \
+            (test_config.test_option == 'option_usmnone_cpu' and (test_config.current_test in cmpllink_only_as_wa_tests_usmnone)):
        return True
     if test_config.current_test.startswith(('text_experimental_obj_', 'text_experimental_tex_', 'graphics_interop_')) and test_config.device_filter.count("cuda") == 0:
         return True
