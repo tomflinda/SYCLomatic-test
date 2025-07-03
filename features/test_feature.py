@@ -18,14 +18,15 @@ sys.path.append(parent)
 
 from test_utils import *
 cmpl_only_tests =['thrust-for-h2o4gpu', 'cublas-create-Sgemm-destroy', 'cublasLegacyLv123', 'cublasReturnType', 'cublasTtrmm', 'cublas_64',
-                 'grid_constant', 'cusolver_range', 'cusparse-helper', 'macro', 'volatile-vec']
+                 'grid_constant', 'cusolver_range', 'cusparse-helper', 'macro', 'volatile-vec', 'cusparse-usm', 'text_experimental_build_only_before12']
 
 cmpllink_only_as_wa_tests = ['thrust-op', 'curand', 'curand-usm', 'curand-cross-function', 'cublasBatch', 'cublasGetSetMatrix', 'cublasGetSetVector', 'cublasIsamax_etc', 'cublas-lambda',
                         'cublas_curandInMacro', 'cublasLegacyCZ', 'cublasLegacyHelper', 'cublasRegularCZ', 'cublasTsyrkx', 'cublasTtrmmLegacy', 'cublas-usm-legacy', 'math-emu', 'cublas-usm',
                         'cusolverDnEi', 'cusolverDnEi-part2', 'cusolverDnLn', 'cusolverDnLn_cuda10-1', 'cusolverDnLn_cuda10-1-part2', 'cusolverDnLn-part2', 'cublas-only-usm', 'cufft-deduce',
                          'cufft-different-locations-usm', 'cufft-reuse-handle', 'cufft-different-locations', 'cufft-usm', 'cufft', 'cooperative_groups', 'driverCtx', 'driverDevice', 'driverArray', 'driverTex',
                          'driverMemset', 'cub_warp', 'cub_device_run_length_encode_encode', 'cooperative_group_coalesced_group', 'text_experimental_build_only',
-                         'wmma', 'assert', 'peer_access_using_driver_api', 'curand-device-usm', 'curand-device', 'cufft-func-ptr', 'cufft-others', 'cub_block', 'codepin_basic', 'math-direct', 'math-helper', 'grid_sync_root_group', 'device_cpu', 'image']
+                         'wmma', 'assert', 'peer_access_using_driver_api', 'curand-device-usm', 'curand-device', 'cufft-func-ptr', 'cufft-others', 'cub_block', 'codepin_basic', 'math-direct', 'math-helper', 'grid_sync_root_group', 'device_cpu', 'image',
+                        'nvshmem']
 
 occupancy_calculation_exper = ['occupancy_calculation']
 
@@ -163,7 +164,8 @@ def build_test():
              'cudnn-binary', 'cudnn-bnp1', 'cudnn-bnp2', 'cudnn-bnp3', 'cudnn-normp1', 'cudnn-normp2', 'cudnn-normp3',
              'cudnn-convp1', 'cudnn-convp2', 'cudnn-convp3', 'cudnn-convp4', 'cudnn-convp5', 'cudnn-convp6', 'cudnn-rnn',
              'cudnn-GetErrorString', 'cudnn-convp7',
-             'cudnn-types', 'cudnn-version', 'cudnn-dropout', 'matmul', 'matmul_2', 'matmul_3', 'result_type_overload', 'get_library_version'
+             'cudnn-types', 'cudnn-version', 'cudnn-dropout', 'matmul', 'matmul_2', 'matmul_3', 'result_type_overload', 'get_library_version',
+             'cudnn-conv_v7'
              ]
 
     no_fast_math_tests = ['math-emu-half-after11', 'math-emu-half2-after11', 'math-ext-half-after11', 'math-ext-half2-after11',
