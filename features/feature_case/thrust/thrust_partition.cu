@@ -11,6 +11,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/execution_policy.h>
 #include <thrust/extrema.h>
+#include <thrust/find.h>
 #include <thrust/host_vector.h>
 #include <thrust/partition.h>
 #include <thrust/sort.h>
